@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+    id 'jacoco'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.1.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+}
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        exceptionFormat = 'full'
+        events "failed"
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                println "\ntotal: ${result.testCount} | passed: ${result.successfulTestCount} | failed: ${result.failedTestCount} | skipped: ${result.skippedTestCount}\n"
+            }
+        }
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = false
+        csv.enabled = false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
